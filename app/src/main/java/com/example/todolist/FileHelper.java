@@ -1,16 +1,24 @@
 package com.example.todolist;
 
 import android.content.Context;
+import android.content.res.Resources;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import androidx.appcompat.app.AppCompatActivity;
+import android.content.res.Resources;
 
-public class FileHelper {
+public class FileHelper extends AppCompatActivity {
 
     public static final String FILENAME = "listinfo.dat";
 
@@ -27,26 +35,5 @@ public class FileHelper {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static ArrayList<String> readData(Context context){
-        ArrayList<String> itemsList= null;
-        try{
-            FileInputStream fis = context.openFileInput(FILENAME);
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            itemsList = (ArrayList<String>) ois.readObject();
-
-        } catch (FileNotFoundException e) {
-
-            itemsList = new ArrayList<>();
-
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        return itemsList;
     }
 }

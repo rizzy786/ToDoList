@@ -2,6 +2,7 @@ package com.example.todolist;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,6 +13,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
@@ -31,14 +33,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn = findViewById(R.id.add_btn);
         itemsList= findViewById(R.id.items_list);
 
-        items = FileHelper.readData(this);
+        Resources res = getResources();
 
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
+        ArrayList<String> mTodos = new ArrayList<String>();
+        Collections.addAll(mTodos, res.getStringArray(R.array.todos));
+
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mTodos);
         itemsList.setAdapter(adapter);
 
-
         btn.setOnClickListener(this);
-        itemsList.setOnItemClickListener(this);
+//        itemsList.setOnItemClickListener(this);
     }
 
     @Override
@@ -59,6 +63,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         items.remove(position);
         adapter.notifyDataSetChanged();
-        Toast.makeText(this, "Delete", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show();
     }
 }

@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">ToDoList</string>
+
+    <string-array name="todos">
+        <item>Wake up</item>
+        <item>Drink Coffee</item>
+        <item>Make at least one person laugh</item>
+        <item>Plant a tree</item>
+        <item>Ponder on duality of existence</item>
+        <item>Go to sleep</item>
+        <item>Fix crash!</item>
+    </string-array>
+
 </resources>
