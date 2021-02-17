@@ -2,6 +2,7 @@ package com.example.todolist;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -26,6 +28,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        /*call the super class onCreate to complete the
+            creation of activity with any state changes */
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -33,8 +38,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn = findViewById(R.id.add_btn);
         itemsList= findViewById(R.id.items_list);
 
-        Resources res = getResources();
+        /*read into mTodos array from strings.xml*/
 
+        Resources res = getResources();
         ArrayList<String> mTodos = new ArrayList<String>();
         Collections.addAll(mTodos, res.getStringArray(R.array.todos));
 
@@ -42,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         itemsList.setAdapter(adapter);
 
         btn.setOnClickListener(this);
-//        itemsList.setOnItemClickListener(this);
+        itemsList.setOnItemClickListener(this);
     }
 
     @Override
@@ -61,8 +67,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        items.remove(position);
-        adapter.notifyDataSetChanged();
-        Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show();
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.popupview);
+
+        String value = (String)itemsList.getItemAtPosition( position );
+
+        EditText txt = (EditText)dialog.findViewById(R.id.popup_edit_text);
+        txt.setText(value);
+        dialog.show();
     }
 }
