@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mTodos);
         itemsList.setAdapter(adapter);
-
         btn.setOnClickListener(this);
         itemsList.setOnItemClickListener(this);
     }
@@ -50,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch(v.getId()){
             case R.id.add_btn:
             String itemEntered = itemET.getText().toString();
+            itemEntered = itemEntered.replace("\n", " ");
             adapter.add(itemEntered);
             itemET.setText("");
 
@@ -88,16 +88,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         alertDialog.show();
     }
 
-    private void deleteItem(int position){
-        FileHelper.deleteData(this);
-        mTodos.remove(position);
+    private void deleteItem(int lineNo){
+        FileHelper.deleteData(lineNo, this);
+        mTodos.remove(lineNo);
         adapter.notifyDataSetChanged();
         Toast.makeText(this, "Item Deleted", Toast.LENGTH_SHORT).show();
     }
 
-    private void updateItem(int position, String newText){
-        FileHelper.updateData(newText,this);
-        mTodos.set(position, editText.getText().toString());
+    private void updateItem(int lineNo, String newText){
+        newText = newText.replace("\n", " ");
+        FileHelper.updateData(lineNo, newText, this);
+        mTodos.set(lineNo, newText);
         adapter.notifyDataSetChanged();
         Toast.makeText(this, "Item Updated to " + newText, Toast.LENGTH_SHORT).show();
     }
