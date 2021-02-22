@@ -16,11 +16,13 @@ public class FileHelper extends AppCompatActivity {
 
     public static ArrayList<String> readFile(Context context) {
         ArrayList<String> mTodos = new ArrayList<String>();
+        //auto-generate file if not found
         try {
             File file = new File(context.getFilesDir().getAbsolutePath() + File.separator + FILENAME);
             if (!file.exists()) {
                 file.createNewFile();
             }
+            //read text file line by line
             BufferedReader br = new BufferedReader(new FileReader(file));
             String line;
             while ((line = br.readLine()) != null) {
@@ -32,6 +34,11 @@ public class FileHelper extends AppCompatActivity {
         return mTodos;
     }
 
+    /**
+     * add data to the textfile when user adds item
+     * @param itemToAdd
+     * @param context
+     */
     public static void writeData(String itemToAdd, Context context) {
         File file = new File(context.getFilesDir().getAbsolutePath() + File.separator + FILENAME);
 

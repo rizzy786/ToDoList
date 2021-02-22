@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button btn;
     private ListView itemsList;
 
+    //returns a view for each object in a collection of data
     private ArrayAdapter<String> adapter;
     private ArrayList<String> mTodos;
 
@@ -39,11 +40,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mTodos = FileHelper.readFile(this);
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mTodos);
+        //display items in a list
         itemsList.setAdapter(adapter);
         btn.setOnClickListener(this);
         itemsList.setOnItemClickListener(this);
     }
 
+    /**
+     * add item to list when clicked on and replace editText with ""
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         switch(v.getId()){
@@ -63,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
         editText = new EditText(MainActivity.this);
 
+        //pop up when clicked on individual item
         AlertDialog.Builder editDeleteDialog = new AlertDialog.Builder(MainActivity.this);
         editDeleteDialog.setTitle("Update/Delete Task");
 
@@ -71,6 +78,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         editDeleteDialog.setView(editText);
 
         editDeleteDialog.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+
+            //call updateItem method
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 updateItem(position, editText.getText().toString());
@@ -78,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
         editDeleteDialog.setNegativeButton("Delete", new DialogInterface.OnClickListener() {
+            //call deleteItem method
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 deleteItem(position);
