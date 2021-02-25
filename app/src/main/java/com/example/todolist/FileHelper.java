@@ -22,8 +22,9 @@ public class FileHelper extends AppCompatActivity {
             if (!file.exists()) {
                 file.createNewFile();
             }
-            //read text file line by line
+            //Reads text from a character-input stream, to provide for the efficient reading of characters, arrays, and lines
             BufferedReader br = new BufferedReader(new FileReader(file));
+            //read text file line by line
             String line;
             while ((line = br.readLine()) != null) {
                 mTodos.add(line);
@@ -43,6 +44,7 @@ public class FileHelper extends AppCompatActivity {
         File file = new File(context.getFilesDir().getAbsolutePath() + File.separator + FILENAME);
 
         try {
+            //Convenience class for writing character files
             FileWriter fw = new FileWriter(file, true);
             fw.append(itemToAdd);
             fw.append("\n");
