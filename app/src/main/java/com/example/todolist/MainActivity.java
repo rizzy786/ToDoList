@@ -26,8 +26,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ArrayAdapter<String> adapter;
     private ArrayList<String> mTodos;
 
-    private static final String DIALOGDETAILS = "dialogDetails";
-    String[] dialogDetails = {"N", "0"};
+    private static final String DIALOG_DETAILS = "dialogDetails";
+    String[] dialogDetails = {"N", "0", ""};
 
     private String showDialog = "N";
     int lineNo;
@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         // recovering the instance state
         if (savedInstanceState != null){
-            dialogDetails = savedInstanceState.getStringArray(DIALOGDETAILS);
+            dialogDetails = savedInstanceState.getStringArray(DIALOG_DETAILS);
         }
 
         /*call the super class onCreate to complete the
@@ -55,13 +55,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mTodos);
 
         itemsList.setAdapter(adapter);
+
         btn.setOnClickListener(this);
         itemsList.setOnItemClickListener(this);
+    }
 
-        if(dialogDetails[0].equals("Y")) {
-            lineNo = Integer.valueOf(dialogDetails[1]);
-            buildPopup();
-        }
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
     }
 
     /**
@@ -70,11 +96,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
-        dialogDetails = savedInstanceState.getStringArray(DIALOGDETAILS);
+        dialogDetails = savedInstanceState.getStringArray(DIALOG_DETAILS);
+
         if(dialogDetails[0].equals("Y")) {
             lineNo = Integer.valueOf(dialogDetails[1]);
             buildPopup();
+            editText.setText(dialogDetails[2]);
+            showDialog = "Y";
         }
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     /**
@@ -85,15 +115,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onSaveInstanceState(Bundle savedInstanceState) {
         dialogDetails[0]= showDialog;
         dialogDetails[1]= String.valueOf(lineNo);
-        savedInstanceState.putStringArray(DIALOGDETAILS, dialogDetails);
+
+        if (showDialog.equals("Y")) {
+            dialogDetails[2] = editText.getText().toString();
+        } else {
+            dialogDetails[2] = "";
+        }
+        savedInstanceState.putStringArray(DIALOG_DETAILS, dialogDetails);
 
         // call superclass to save any view hierarchy
         super.onSaveInstanceState(savedInstanceState);
     }
 
-
     /**
-     * add item to list when    clicked on and replace editText with ""
+     * add item to list when clicked on and replace editText with ""
      * @param v
      */
     @Override
