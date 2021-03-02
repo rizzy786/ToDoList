@@ -8,14 +8,16 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 public class FileHelper extends AppCompatActivity {
 
     public static final String FILENAME = "to_do_list.txt";
 
-    public static ArrayList<String> readFile(Context context) {
-        ArrayList<String> mTodos = new ArrayList<String>();
+    public static String[] readFile(Context context) {
+        List<String> mTodos = new ArrayList<String>();
         //auto-generate file if not found
         try {
             File file = new File(context.getFilesDir().getAbsolutePath() + File.separator + FILENAME);
@@ -32,7 +34,9 @@ public class FileHelper extends AppCompatActivity {
             br.close();
         } catch (IOException e) {
         }
-        return mTodos;
+        String [] tasks = new String[mTodos.size()];
+        tasks = mTodos.toArray(tasks);
+        return tasks;
     }
 
     /**
