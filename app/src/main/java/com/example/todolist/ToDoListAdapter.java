@@ -21,10 +21,36 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ViewHo
 
     String[] data;
     EditText editText;
+    int lineNo;
+
     private String showDialog = "N";
 
     public ToDoListAdapter(String[] data) {
         this.data = data;
+    }
+
+    public String getShowDialog() {
+        return showDialog;
+    }
+
+    public void setShowDialog(String showDialog) {
+        this.showDialog = showDialog;
+    }
+
+    public EditText getEditText() {
+        return editText;
+    }
+
+    public void setEditText(EditText editText) {
+        this.editText = editText;
+    }
+
+    public int getLineNo() {
+        return lineNo;
+    }
+
+    public void setLineNo (int lineNo) {
+        this.lineNo = lineNo;
     }
 
     public void setData(String [] data){
@@ -35,6 +61,12 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ViewHo
         return data;
     }
 
+    /**
+     *  inflates a View item and returns a new ViewHolder that contains it
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
@@ -43,6 +75,11 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ViewHo
         return viewHolder;
     }
 
+    /**
+     *  sets the contents of a View item at a given position in the RecyclerView
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final String item = data[position];
@@ -81,17 +118,22 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ViewHo
                 editDeleteDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        showDialog="N";
+                        setShowDialog("N");
                     }
                 });
 
                 AlertDialog alertDialog = editDeleteDialog.create();
                 alertDialog.show();
-                showDialog="Y";
+                setShowDialog("Y");
+                setLineNo(lineNo);
             }
         });
     }
 
+    /**
+     *  returns the total number of items in the data set held by the adapter
+     * @return
+     */
     @Override
     public int getItemCount() {
         return data.length;
@@ -107,16 +149,16 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ViewHo
         }
     }
 
-    private void updateItem(int lineNo, String newText, Context context){
+    public void updateItem(int lineNo, String newText, Context context){
         newText = newText.replace("\n", " ");
         FileHelper.updateData(lineNo, newText, context);
         data[lineNo] = newText;
         notifyDataSetChanged();
-        showDialog="N";
+        setShowDialog("N");
         Toast.makeText(context, "Item updated to " + newText, Toast.LENGTH_SHORT).show();
     }
 
-    private void deleteItem(int lineNo, Context context){
+    public void deleteItem(int lineNo, Context context){
         FileHelper.deleteData(lineNo, context);
 
         List<String> list = new ArrayList<>();
@@ -126,10 +168,7 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ViewHo
         data = list.toArray(data);
 
         notifyItemRemoved(lineNo);
-
-        showDialog="N";
-        Toast.makeText(context, String.valueOf(lineNo), Toast.LENGTH_SHORT).show();
-
-        //        Toast.makeText(context, "Item Deleted", Toast.LENGTH_SHORT).show();
+        setShowDialog("N");
+        Toast.makeText(context, "Item Deleted", Toast.LENGTH_SHORT).show();
     }
 }

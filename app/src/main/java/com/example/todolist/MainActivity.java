@@ -4,9 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class MainActivity extends AppCompatActivity {
 
     private EditText itemET;
     private EditText editText;
@@ -26,20 +27,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     ToDoListAdapter adapter;
     RecyclerView recyclerView;
 
-    private static final String DIALOG_DETAILS = "dialogDetails";
-    String[] dialogDetails = {"N", "0", ""};
-
-    private String showDialog = "N";
     int lineNo;
+
+    private static final String DIALOG_DETAILS = "dialogDetails";
+    String[] dialogDetails = {"N", "", ""};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // recovering the instance state
-        /*
+
         if (savedInstanceState != null){
             dialogDetails = savedInstanceState.getStringArray(DIALOG_DETAILS);
         }
-        */
 
         /*call the super class onCreate to complete the
             creation of activity with any state changes */
@@ -116,50 +115,78 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      *
      * @param savedInstanceState
      */
-/*
+
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         dialogDetails = savedInstanceState.getStringArray(DIALOG_DETAILS);
 
         if(dialogDetails[0].equals("Y")) {
-            lineNo = Integer.valueOf(dialogDetails[1]);
-            buildPopup();
-            editText.setText(dialogDetails[2]);
-            showDialog = "Y";
+            lineNo = Integer.valueOf(dialogDetails[2]);
+            editText = new EditText(this);
+            AlertDialog.Builder editDeleteDialog = new AlertDialog.Builder(this);
+            editDeleteDialog.setTitle("Update/Delete Task");
+
+            editText.setText(dialogDetails[1]);
+            editDeleteDialog.setView(editText);
+
+            editDeleteDialog.setNegativeButton("Delete", new DialogInterface.OnClickListener() {
+                //call deleteItem method
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    adapter.deleteItem(lineNo, MainActivity.this);
+                }
+            });
+
+            editDeleteDialog.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                //call updateItem method
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    String newText = editText.getText().toString();
+                    adapter.updateItem(lineNo, newText, MainActivity.this);
+                }
+            });
+
+            editDeleteDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    adapter.setShowDialog("N");
+                }
+            });
+
+            AlertDialog alertDialog = editDeleteDialog.create();
+            alertDialog.show();
+            adapter.setEditText(editText);
+            adapter.setShowDialog("Y");
+            adapter.setLineNo(lineNo);
         }
         super.onRestoreInstanceState(savedInstanceState);
     }
-*/
+
     /**
      * invoked when the activity may be temporarily destroyed, save the instance state here
      * @param savedInstanceState
      */
-/*
+
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        dialogDetails[0]= showDialog;
-        dialogDetails[1]= String.valueOf(lineNo);
+        dialogDetails[0]= adapter.getShowDialog();
 
-        if (showDialog.equals("Y")) {
-            dialogDetails[2] = editText.getText().toString();
+        if (adapter.getShowDialog().equals("Y")) {
+            dialogDetails[1] = adapter.getEditText().getText().toString();
         } else {
-            dialogDetails[2] = "";
+            dialogDetails[1] = "";
         }
+
+        dialogDetails[2]= String.valueOf(adapter.getLineNo());
+
         savedInstanceState.putStringArray(DIALOG_DETAILS, dialogDetails);
 
         // call superclass to save any view hierarchy
         super.onSaveInstanceState(savedInstanceState);
     }
-*/
+
     /**
      * add item to list when clicked on and replace editText with ""
      * @param
      */
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        editText = new EditText(MainActivity.this);
-        showDialog="Y";
-        lineNo = position;
-    }
 }
